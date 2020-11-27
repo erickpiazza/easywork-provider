@@ -1,6 +1,6 @@
 import React from 'react';
-import {TouchableOpacity, Text, View, FlatList} from 'react-native';
-import {string} from 'yup';
+import {TouchableOpacity, FlatList, Button} from 'react-native';
+
 import {useAuth} from '../../hooks/auth';
 import {
   Container,
@@ -69,6 +69,7 @@ const Profile: React.FC = () => {
         renderItem={({item}) => <Image source={{uri: item.image_url}} />}
         numColumns={3}
       />
+      <Button title="sair" onPress={signOut} />
     </Container>
   );
 };
@@ -82,32 +83,32 @@ interface IListImage {
 
 const imageList: IListImage[] = [
   {
-    id: '2312das',
+    id: '231fsdfsd2das',
     image_url:
       'http://192.168.0.20:3333/files/0e26957a1e8b04e38c52-vingadores.png',
   },
   {
-    id: '23fsdfsd12das',
+    id: '23fsdfsfsdfsdd12das',
     image_url:
       'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
   },
   {
-    id: '23ggg12das',
+    id: '23gggfsdf2das',
     image_url:
       'http://192.168.0.20:3333/files/0e26957a1e8b04e38c52-vingadores.png',
   },
   {
-    id: '23ffsdfsd12das',
+    id: '23ffsdffsdsd12das',
     image_url:
       'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
   },
   {
-    id: '23ffsdfsd12das',
+    id: '23ffsdfsffd12das',
     image_url:
       'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
   },
   {
-    id: '23ffsdfsd12das',
+    id: '23ffsdfdsd12das',
     image_url:
       'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
   },

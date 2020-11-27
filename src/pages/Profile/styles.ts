@@ -32,7 +32,7 @@ export const Avatar = styled.Image`
   width: 140px;
   border-radius: 2000px;
   border-color: #fff;
-  border-width: 5;
+  border-width: 5px;
 `;
 
 export const TextNameProvider = styled.Text`
