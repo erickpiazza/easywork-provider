@@ -13,7 +13,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  //   avatar_url: string;
+  avatar_url: string;
 }
 
 interface SignInCredencials {
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC = ({children}) => {
       email,
       password,
     });
-    console.log(response.data);
+    console.log('response.data', response.data);
     const {provider, token} = response.data;
 
     await AsyncStorage.multiSet([
