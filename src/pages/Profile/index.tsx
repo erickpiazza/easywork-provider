@@ -1,7 +1,17 @@
-import React from 'react';
-import {TouchableOpacity, FlatList, Button} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  TouchableOpacity,
+  FlatList,
+  Button,
+  Alert,
+  View,
+  Text,
+} from 'react-native';
+import ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/Feather';
 
 import {useAuth} from '../../hooks/auth';
+import api from '../../services/api';
 import {
   Container,
   AvatarCoverWrapper,
@@ -15,36 +25,127 @@ import {
   Image,
   TitleBox,
   TextContent,
+  TextCoverEdit,
+  ContainerFooterCover,
+  ContentFooterCover,
+  ButtonEditCover,
 } from './styles';
 
-const uritt =
-  'http://192.168.0.20:3333/files/0e26957a1e8b04e38c52-vingadores.png';
+interface IListImage {
+  id: string;
+  image_url: string;
+}
 
 const Profile: React.FC = () => {
-  const {signOut, user} = useAuth();
+  const [imageList, setImageList] = useState<IListImage[]>([]);
+
+  const {signOut, user, updateUser} = useAuth();
+
+  useEffect(() => {
+    api.get('providers/imagens').then((response) => {
+      setImageList(response.data);
+    });
+  }, []);
+
+  const handleUpdateAvatar = useCallback(() => {
+    ImagePicker.showImagePicker(
+      {
+        title: 'Editar seu Avatar',
+        cancelButtonTitle: 'Cancelar',
+        takePhotoButtonTitle: 'Usar câmera',
+        chooseFromLibraryButtonTitle: 'Escolher da galeria',
+      },
+      (response) => {
+        if (response.didCancel) {
+          return;
+        }
+        if (response.error) {
+          Alert.alert('Erro ao atualizar seu avatar');
+          return;
+        }
+
+        const data = new FormData();
+        data.append('avatar', {
+          type: 'image/jpg',
+          name: `${user.id}.jpg`,
+          uri: response.uri,
+        });
+
+        api.patch('providers/avatar', data).then((apiResponse) => {
+          console.log('apiResponse.data', apiResponse.data);
+          updateUser(apiResponse.data);
+        });
+      },
+    );
+  }, [updateUser, user.id]);
+
+  const handleUpdateCover = useCallback(() => {
+    ImagePicker.showImagePicker(
+      {
+        title: 'Editar sua capa',
+        cancelButtonTitle: 'Cancelar',
+        takePhotoButtonTitle: 'Usar câmera',
+        chooseFromLibraryButtonTitle: 'Escolher da galeria',
+      },
+      (response) => {
+        if (response.didCancel) {
+          return;
+        }
+        if (response.error) {
+          Alert.alert('Erro ao atualizar seu avatar');
+          return;
+        }
+
+        const data = new FormData();
+        data.append('cover', {
+          type: 'image/jpg',
+          name: `${user.id}.jpg`,
+          uri: response.uri,
+        });
+
+        api.patch('providers/cover', data).then((apiResponse) => {
+          console.log('apiResponse.data', apiResponse.data);
+          updateUser(apiResponse.data);
+        });
+      },
+    );
+  }, [updateUser, user.id]);
 
   return (
     <Container>
+      {console.log('user', user)}
       <AvatarCoverWrapper>
-        {console.log('console.log result', user)}
-        <TouchableOpacity activeOpacity={0.8}>
-          <Cover source={{uri: uritt}} />
-        </TouchableOpacity>
+        <View>
+          <Cover source={{uri: user.cover_url}} />
+          <ContainerFooterCover>
+            <ContentFooterCover>
+              <ButtonEditCover activeOpacity={0.5} onPress={handleUpdateCover}>
+                <Icon
+                  style={{marginRight: 4}}
+                  size={16}
+                  color="#000000"
+                  name="camera"
+                />
+                <TextCoverEdit>Editar capa</TextCoverEdit>
+              </ButtonEditCover>
+            </ContentFooterCover>
+          </ContainerFooterCover>
+        </View>
+
         <AvatarWrapper>
-          <TouchableOpacity activeOpacity={0.9}>
-            <Avatar source={{uri: uritt}} />
+          <TouchableOpacity activeOpacity={0.9} onPress={handleUpdateAvatar}>
+            <Avatar source={{uri: user.avatar_url}} />
           </TouchableOpacity>
         </AvatarWrapper>
       </AvatarCoverWrapper>
-      <TextNameProvider>Marcenaria Roberto</TextNameProvider>
-      <TextPhoneProvider>(19) 98888-7777</TextPhoneProvider>
+      <TextNameProvider>{user.name}</TextNameProvider>
+      <TextPhoneProvider>{user.phone}</TextPhoneProvider>
 
       <ContainerInformations>
         <TitleBox>Endereço</TitleBox>
         <BoxInformations>
           <TextContent>
-            Rua Julio Tim N° 396 Cep 13060824 Jardim Ipaussurama Campinas São
-            Paulo
+            {`${user.street} ${user.city} ${user.state} ${user.uf} ${user.zipcode}`}
           </TextContent>
         </BoxInformations>
       </ContainerInformations>
@@ -52,21 +153,16 @@ const Profile: React.FC = () => {
       <ContainerInformations>
         <TitleBox>Sobre Nos</TitleBox>
         <BoxInformations>
-          <TextContent style={{textAlign: 'justify'}}>
-            Ateliê e design de ambientes planejados que desenvolve projetos com
-            funcionalidade e personalidade. Nosso produto possui alta tecnologia
-            e o cuidado artesanal de milímetro a milímetro para entregar aos
-            nossos clientes projetos com exclusividade e sempre mantendo a
-            riqueza nos detalhes dos acabamentos com qualidade, excelência e
-            durabilidade.
-          </TextContent>
+          <TextContent style={{textAlign: 'justify'}}>{user.about}</TextContent>
         </BoxInformations>
       </ContainerInformations>
 
       <TitleBox>Meu trabalhos</TitleBox>
       <FlatList
         data={imageList}
-        renderItem={({item}) => <Image source={{uri: item.image_url}} />}
+        renderItem={({item}) => (
+          <Image key={item.id} source={{uri: item.image_url}} />
+        )}
         numColumns={3}
       />
       <Button title="sair" onPress={signOut} />
@@ -75,41 +171,3 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
-
-interface IListImage {
-  id: string;
-  image_url: string;
-}
-
-const imageList: IListImage[] = [
-  {
-    id: '231fsdfsd2das',
-    image_url:
-      'http://192.168.0.20:3333/files/0e26957a1e8b04e38c52-vingadores.png',
-  },
-  {
-    id: '23fsdfsfsdfsdd12das',
-    image_url:
-      'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
-  },
-  {
-    id: '23gggfsdf2das',
-    image_url:
-      'http://192.168.0.20:3333/files/0e26957a1e8b04e38c52-vingadores.png',
-  },
-  {
-    id: '23ffsdffsdsd12das',
-    image_url:
-      'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
-  },
-  {
-    id: '23ffsdfsffd12das',
-    image_url:
-      'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
-  },
-  {
-    id: '23ffsdfdsd12das',
-    image_url:
-      'http://192.168.0.20:3333/files/07f174b59a7344294d3d-liga da justiça.jpg',
-  },
-];

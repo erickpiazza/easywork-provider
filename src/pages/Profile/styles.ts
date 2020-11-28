@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import {Dimensions} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 export const Container = styled.ScrollView`
   flex: 1;
@@ -16,6 +17,35 @@ export const Cover = styled.Image`
   height: 200px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+`;
+export const ContainerFooterCover = styled.View`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+export const ButtonEditCover = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 4px 8px;
+
+  border-radius: 8px;
+`;
+
+export const ContentFooterCover = styled.View`
+  position: relative;
+  padding-left: 20px;
+  padding-right: 8px;
+  padding-bottom: 10px;
+  justify-content: flex-end;
+  flex-direction: row;
+`;
+export const TextCoverEdit = styled.Text`
+  color: #000000;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'RobotoSlab-Regular';
 `;
 
 export const AvatarWrapper = styled.View`

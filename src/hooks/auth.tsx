@@ -14,6 +14,16 @@ interface User {
   name: string;
   email: string;
   avatar_url: string;
+  cover_url: string;
+  phone: string;
+  about: string;
+  street: string;
+  city: string;
+  uf: string;
+  state: string;
+  zipcode: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface SignInCredencials {
@@ -64,7 +74,6 @@ export const AuthProvider: React.FC = ({children}) => {
       email,
       password,
     });
-    console.log('response.data', response.data);
     const {provider, token} = response.data;
 
     await AsyncStorage.multiSet([
@@ -88,6 +97,7 @@ export const AuthProvider: React.FC = ({children}) => {
 
   const updateUser = useCallback(
     async (user: User) => {
+      console.log('update user', user);
       await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user));
 
       setData({
