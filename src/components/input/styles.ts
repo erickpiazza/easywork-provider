@@ -43,3 +43,10 @@ export const TextInput = styled.TextInput`
 export const Icon = styled(FeatherIcon)`
   margin-right: 8px;
 `;
+
+export const TitleInput = styled.Text`
+  color: #1c1c1c;
+  font-size: 16px;
+  font-family: 'RobotoSlab-Regular';
+  margin-bottom: 12px;
+`;
