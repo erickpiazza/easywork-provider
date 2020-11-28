@@ -97,7 +97,6 @@ export const AuthProvider: React.FC = ({children}) => {
 
   const updateUser = useCallback(
     async (user: User) => {
-      console.log('update user', user);
       await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user));
 
       setData({

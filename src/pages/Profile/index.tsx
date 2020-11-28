@@ -1,13 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  TouchableOpacity,
-  FlatList,
-  Button,
-  Alert,
-  View,
-  Text,
-} from 'react-native';
+import {TouchableOpacity, FlatList, Alert, Button, View} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import ImageCropPicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Feather';
 
 import {useAuth} from '../../hooks/auth';
@@ -29,7 +23,13 @@ import {
   ContainerFooterCover,
   ContentFooterCover,
   ButtonEditCover,
+  ButtonEditProfile,
+  TextEditProfile,
+  ContainerEditProfile,
+  ButtonEditImage,
+  ContainerEditImage,
 } from './styles';
+import {useNavigation} from '@react-navigation/native';
 
 interface IListImage {
   id: string;
@@ -38,6 +38,7 @@ interface IListImage {
 
 const Profile: React.FC = () => {
   const [imageList, setImageList] = useState<IListImage[]>([]);
+  const navigation = useNavigation();
 
   const {signOut, user, updateUser} = useAuth();
 
@@ -72,7 +73,6 @@ const Profile: React.FC = () => {
         });
 
         api.patch('providers/avatar', data).then((apiResponse) => {
-          console.log('apiResponse.data', apiResponse.data);
           updateUser(apiResponse.data);
         });
       },
@@ -104,16 +104,36 @@ const Profile: React.FC = () => {
         });
 
         api.patch('providers/cover', data).then((apiResponse) => {
-          console.log('apiResponse.data', apiResponse.data);
           updateUser(apiResponse.data);
         });
       },
     );
   }, [updateUser, user.id]);
 
+  const handleUpdateImages = useCallback(() => {
+    ImageCropPicker.openPicker({
+      multiple: true,
+    }).then((images) => {
+      const data = new FormData();
+
+      images.map((item) => {
+        data.append('images', {
+          type: 'image/jpg',
+          name: `${user.id}.jpg`,
+          uri: item.path,
+        });
+      });
+
+      api.post('providers/imagens', data).then((apiResponse) => {
+        api.get('providers/imagens').then((response) => {
+          setImageList(response.data);
+        });
+      });
+    });
+  }, [user.id]);
+
   return (
     <Container>
-      {console.log('user', user)}
       <AvatarCoverWrapper>
         <View>
           <Cover source={{uri: user.cover_url}} />
@@ -141,11 +161,26 @@ const Profile: React.FC = () => {
       <TextNameProvider>{user.name}</TextNameProvider>
       <TextPhoneProvider>{user.phone}</TextPhoneProvider>
 
+      <ContainerEditProfile>
+        <ButtonEditProfile onPress={() => navigation.navigate('EditProfile')}>
+          <>
+            <Icon
+              color="#ffffff"
+              style={{marginLeft: 8}}
+              size={16}
+              name="edit"
+            />
+            <TextEditProfile>Editar Perfil</TextEditProfile>
+          </>
+        </ButtonEditProfile>
+      </ContainerEditProfile>
       <ContainerInformations>
         <TitleBox>Endereço</TitleBox>
         <BoxInformations>
           <TextContent>
-            {`${user.street} ${user.city} ${user.state} ${user.uf} ${user.zipcode}`}
+            {user.street && user.city && user.state && user.uf && user.zipcode
+              ? `${user.street} ${user.city} ${user.state} ${user.uf} ${user.zipcode}`
+              : 'Você ainda não empreecheu seu endereço este campo é muito importante para seus clientes te encontrar'}
           </TextContent>
         </BoxInformations>
       </ContainerInformations>
@@ -153,11 +188,31 @@ const Profile: React.FC = () => {
       <ContainerInformations>
         <TitleBox>Sobre Nos</TitleBox>
         <BoxInformations>
-          <TextContent style={{textAlign: 'justify'}}>{user.about}</TextContent>
+          {user.about ? (
+            <TextContent style={{textAlign: 'justify'}}>
+              {user.about}
+            </TextContent>
+          ) : (
+            <TextContent style={{textAlign: 'justify'}}>
+              Voce ainda não empreencheu este campo. Aqui você pode falar sobre
+              seu trabalho ou sua empresa, fale para nos os trabalhos que você
+              realiza.
+            </TextContent>
+          )}
         </BoxInformations>
       </ContainerInformations>
+      <ContainerEditImage>
+        <View style={{flexDirection: 'row', alignContent: 'center'}}>
+          <TitleBox>Meus trabalhos</TitleBox>
+          <Icon style={{marginLeft: 8}} size={16} name="image" />
+        </View>
 
-      <TitleBox>Meu trabalhos</TitleBox>
+        <ButtonEditImage onPress={handleUpdateImages}>
+          <Icon style={{marginLeft: 8}} size={16} name="plus" />
+          <TitleBox>Adicionar</TitleBox>
+        </ButtonEditImage>
+      </ContainerEditImage>
+
       <FlatList
         data={imageList}
         renderItem={({item}) => (
@@ -165,6 +220,7 @@ const Profile: React.FC = () => {
         )}
         numColumns={3}
       />
+
       <Button title="sair" onPress={signOut} />
     </Container>
   );

@@ -1,8 +1,7 @@
 import styled from 'styled-components/native';
 import {Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   flex: 1;
   margin-left: 4px;
   margin-right: 4px;
@@ -110,4 +109,43 @@ export const TextContent = styled.Text`
   font-size: 14px;
   font-family: 'RobotoSlab-Regular';
   margin-bottom: 4px;
+`;
+
+export const ContainerEditProfile = styled.View`
+  margin-top: 12px;
+  align-items: center;
+`;
+
+export const ButtonEditProfile = styled.TouchableOpacity`
+  background: #006bb3;
+  border-top-width: 1px;
+  border-color: #006bb3;
+  padding: 4px 0;
+  width: 150px;
+  border-radius: 4px;
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+export const TextEditProfile = styled.Text`
+  color: #fff;
+  font-size: 16px;
+  font-family: 'RobotoSlab-Regular';
+  margin-left: 4px;
+`;
+
+export const ButtonEditImage = styled.TouchableOpacity`
+  flex-direction: row;
+  align-content: center;
+  margin-right: 8px;
+`;
+
+export const ContainerEditImage = styled.View`
+  flex-direction: row;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  align-content: center;
+  justify-content: space-between;
 `;
