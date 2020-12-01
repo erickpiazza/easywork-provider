@@ -178,8 +178,8 @@ const Profile: React.FC = () => {
         <TitleBox>Endereço</TitleBox>
         <BoxInformations>
           <TextContent>
-            {user.street && user.city && user.state && user.uf && user.zipcode
-              ? `${user.street} ${user.city} ${user.state} ${user.uf} ${user.zipcode}`
+            {user.street && user.city && user.state && user.zipcode
+              ? `${user.street} ${user.city} ${user.state} ${user.zipcode}`
               : 'Você ainda não empreecheu seu endereço este campo é muito importante para seus clientes te encontrar'}
           </TextContent>
         </BoxInformations>

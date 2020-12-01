@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {View, Text, ScrollView, TextInput} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import TextArea from '../../components/textArea/index';
 import Input from '../../components/input/index';
 import {Form} from '@unform/mobile';
@@ -7,6 +7,8 @@ import {FormHandles} from '@unform/core';
 import Button from '../../components/button';
 import {TitleInput} from './styles';
 import {useAuth} from '../../hooks/auth';
+import api from '../../services/api';
+import {useNavigation} from '@react-navigation/native';
 
 interface EditProfileFormData {
   about: string;
@@ -14,11 +16,15 @@ interface EditProfileFormData {
 }
 
 const EditProfile: React.FC = () => {
-  const {user} = useAuth();
+  const {user, updateUser} = useAuth();
   const formRef = useRef<FormHandles>(null);
+  const navigation = useNavigation();
 
   const handleSignUp = (data: EditProfileFormData) => {
-    console.log('dados form', data);
+    api.put('providers/profile', data).then((response) => {
+      updateUser(response.data);
+      navigation.goBack();
+    });
   };
   return (
     <ScrollView style={{marginHorizontal: 12}}>
