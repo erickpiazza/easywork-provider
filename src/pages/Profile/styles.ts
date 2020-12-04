@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import {Dimensions} from 'react-native';
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
   margin-left: 4px;
   margin-right: 4px;

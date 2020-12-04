@@ -58,9 +58,11 @@ const Profile: React.FC = () => {
       },
       (response) => {
         if (response.didCancel) {
+          console.log(response.didCancel);
           return;
         }
         if (response.error) {
+          console.log('error', response.error);
           Alert.alert('Erro ao atualizar seu avatar');
           return;
         }
@@ -89,9 +91,11 @@ const Profile: React.FC = () => {
       },
       (response) => {
         if (response.didCancel) {
+          console.log(response.didCancel);
           return;
         }
         if (response.error) {
+          console.log('error', response.error);
           Alert.alert('Erro ao atualizar seu avatar');
           return;
         }
