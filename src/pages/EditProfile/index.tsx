@@ -74,14 +74,14 @@ const EditProfile: React.FC = () => {
           />
         </View>
       </Form>
+      <Button onPress={() => navigation.navigate('EditProfileMap')}>
+        MAPA
+      </Button>
       <Button
         onPress={() => {
           formRef.current?.submitForm();
         }}>
         Salvar
-      </Button>
-      <Button onPress={() => navigation.navigate('EditProfileMap')}>
-        MAPA
       </Button>
     </ScrollView>
   );

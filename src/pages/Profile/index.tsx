@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TouchableOpacity, FlatList, Alert, Button, View} from 'react-native';
+import {TouchableOpacity, FlatList, Alert, View, Text} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Feather';
@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
   const [imageList, setImageList] = useState<IListImage[]>([]);
   const navigation = useNavigation();
 
-  const {signOut, user, updateUser} = useAuth();
+  const {user, updateUser} = useAuth();
 
   useEffect(() => {
     api.get('providers/imagens').then((response) => {
@@ -60,11 +60,9 @@ const Profile: React.FC = () => {
       },
       (response) => {
         if (response.didCancel) {
-          console.log(response.didCancel);
           return;
         }
         if (response.error) {
-          console.log('error', response.error);
           Alert.alert('Erro ao atualizar seu avatar');
           return;
         }
@@ -93,11 +91,9 @@ const Profile: React.FC = () => {
       },
       (response) => {
         if (response.didCancel) {
-          console.log(response.didCancel);
           return;
         }
         if (response.error) {
-          console.log('error', response.error);
           Alert.alert('Erro ao atualizar seu avatar');
           return;
         }
@@ -193,7 +189,6 @@ const Profile: React.FC = () => {
         <TitleBox>Endereço</TitleBox>
         <BoxInformations>
           <TextContent>
-            {console.log('user', user)}
             {user.street && user.city && user.state && user.zipcode
               ? `${user.street} ${user.city} ${user.state} ${user.zipcode}`
               : 'Você ainda não preencheu seu endereço este campo é muito importante para seus clientes te encontrar'}
@@ -229,15 +224,22 @@ const Profile: React.FC = () => {
         </ButtonEditImage>
       </ContainerEditImage>
 
-      <FlatList
-        data={imageList}
-        renderItem={({item}) => (
-          <Image key={item.id} source={{uri: item.image_url}} />
-        )}
-        numColumns={3}
-      />
-
-      <Button title="sair" onPress={signOut} />
+      {imageList.length > 0 ? (
+        <FlatList
+          style={{height: 300}}
+          data={imageList}
+          renderItem={({item}) => (
+            <Image key={item.id} source={{uri: item.image_url}} />
+          )}
+          numColumns={3}
+        />
+      ) : (
+        <Text
+          style={{textAlign: 'center', fontWeight: 'bold', marginBottom: 18}}>
+          Você ainda não possui nenhuma imagem, clique em Adicionar e escolha
+          suas melhores fotos de seus trabalhos.
+        </Text>
+      )}
     </Container>
   );
 };

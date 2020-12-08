@@ -35,8 +35,6 @@ const EditProfileMap: React.FC = () => {
         }}
         title="Meu negocio é aqui"
       />
-
-      {console.log('user', user)}
     </MapView>
   );
 };
