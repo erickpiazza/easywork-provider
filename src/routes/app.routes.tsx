@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Profile from '../pages/Profile/index';
 import EditProfile from '../pages/EditProfile/index';
+import EditProfileMap from '../pages/EditProfileMap/index';
 import Icon from 'react-native-vector-icons/Feather';
 
 const Router = createBottomTabNavigator();
@@ -21,6 +22,11 @@ function ScreensProfile() {
         options={{title: 'Editar Perfil'}}
         name="EditProfile"
         component={EditProfile}
+      />
+      <RouterStackProfile.Screen
+        options={{title: 'Mapa'}}
+        name="EditProfileMap"
+        component={EditProfileMap}
       />
     </RouterStackProfile.Navigator>
   );

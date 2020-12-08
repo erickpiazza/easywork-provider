@@ -11,8 +11,11 @@ import api from '../../services/api';
 import {useNavigation} from '@react-navigation/native';
 
 interface EditProfileFormData {
+  name: string;
+  zipcode: string;
   about: string;
   street: string;
+  state: string;
 }
 
 const EditProfile: React.FC = () => {
@@ -20,15 +23,16 @@ const EditProfile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
 
-  const handleSignUp = (data: EditProfileFormData) => {
+  const updateProfile = (data: EditProfileFormData) => {
     api.put('providers/profile', data).then((response) => {
       updateUser(response.data);
       navigation.goBack();
     });
   };
+
   return (
     <ScrollView style={{marginHorizontal: 12}}>
-      <Form initialData={user} ref={formRef} onSubmit={handleSignUp}>
+      <Form initialData={user} ref={formRef} onSubmit={updateProfile}>
         <Input
           title="Nome"
           autoCapitalize="words"
@@ -38,17 +42,18 @@ const EditProfile: React.FC = () => {
         <Input
           title="Telefone"
           autoCapitalize="words"
-          placeholder="nome"
+          placeholder="Telefone"
           name="phone"
         />
-        <TextArea
-          title="Sobre nos"
-          autoCapitalize="words"
-          name="about"
-          onSubmitEditing={() => {}}
-        />
+        <TextArea title="Sobre nos" autoCapitalize="words" name="about" />
         <View>
           <TitleInput>Endereço</TitleInput>
+          <Input
+            title="CEP"
+            autoCapitalize="words"
+            placeholder="00000-000"
+            name="zipcode"
+          />
           <Input
             title="Rua e numero"
             autoCapitalize="words"
@@ -67,13 +72,6 @@ const EditProfile: React.FC = () => {
             placeholder="Estado - UF"
             name="state"
           />
-
-          <Input
-            title="CEP"
-            autoCapitalize="words"
-            placeholder="cep 00000-000"
-            name="zipcode"
-          />
         </View>
       </Form>
       <Button
@@ -81,6 +79,9 @@ const EditProfile: React.FC = () => {
           formRef.current?.submitForm();
         }}>
         Salvar
+      </Button>
+      <Button onPress={() => navigation.navigate('EditProfileMap')}>
+        MAPA
       </Button>
     </ScrollView>
   );

@@ -3,6 +3,8 @@ import {TouchableOpacity, FlatList, Alert, Button, View} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Feather';
+import noAvatar from '../../assets/userNoAvatar.png';
+import noCover from '../../assets/userNoCover.png';
 
 import {useAuth} from '../../hooks/auth';
 import api from '../../services/api';
@@ -140,7 +142,12 @@ const Profile: React.FC = () => {
     <Container>
       <AvatarCoverWrapper>
         <View>
-          <Cover source={{uri: user.cover_url}} />
+          {user.cover_url ? (
+            <Cover source={{uri: user.cover_url}} />
+          ) : (
+            <Cover source={noCover} />
+          )}
+
           <ContainerFooterCover>
             <ContentFooterCover>
               <ButtonEditCover activeOpacity={0.5} onPress={handleUpdateCover}>
@@ -158,7 +165,11 @@ const Profile: React.FC = () => {
 
         <AvatarWrapper>
           <TouchableOpacity activeOpacity={0.9} onPress={handleUpdateAvatar}>
-            <Avatar source={{uri: user.avatar_url}} />
+            {user.avatar_url ? (
+              <Avatar source={{uri: user.avatar_url}} />
+            ) : (
+              <Avatar source={noAvatar} />
+            )}
           </TouchableOpacity>
         </AvatarWrapper>
       </AvatarCoverWrapper>
@@ -182,9 +193,10 @@ const Profile: React.FC = () => {
         <TitleBox>Endereço</TitleBox>
         <BoxInformations>
           <TextContent>
+            {console.log('user', user)}
             {user.street && user.city && user.state && user.zipcode
               ? `${user.street} ${user.city} ${user.state} ${user.zipcode}`
-              : 'Você ainda não empreecheu seu endereço este campo é muito importante para seus clientes te encontrar'}
+              : 'Você ainda não preencheu seu endereço este campo é muito importante para seus clientes te encontrar'}
           </TextContent>
         </BoxInformations>
       </ContainerInformations>
@@ -198,7 +210,7 @@ const Profile: React.FC = () => {
             </TextContent>
           ) : (
             <TextContent style={{textAlign: 'justify'}}>
-              Voce ainda não empreencheu este campo. Aqui você pode falar sobre
+              Voce ainda não preencheu este campo. Aqui você pode falar sobre
               seu trabalho ou sua empresa, fale para nos os trabalhos que você
               realiza.
             </TextContent>
